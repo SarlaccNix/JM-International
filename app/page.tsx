@@ -1,18 +1,18 @@
 /** @format */
 
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from 'react';
 
 // Components imports
-import BrandCarousel from "./components/Swiper/brandSwiper";
-import { Image as ImageC, IconButton } from "@chakra-ui/react";
-import Navbar from "./components/Navbar/navbar";
+import BrandCarousel from './components/Swiper/brandSwiper';
+import { Image as ImageC } from '@chakra-ui/react';
+import Navbar from './components/Navbar/navbar';
 
 //reCaptcha API Key 6Lfab5olAAAAAA0wH9-1vXhWsfGg_FKR-FyhN64NX
 
 //Fonts import
-import { Inter } from "next/font/google";
+import { Inter } from 'next/font/google';
 
 //Chakra UI imports
 import {
@@ -26,32 +26,22 @@ import {
   useColorModeValue,
   Divider,
   useBreakpointValue,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import FormModal from "./components/Modal/modal";
-import ContactForm from "./components/ContactForm/contactForm";
-import { brandImages, featuredProdcuts } from "./utils/assetIndex";
-import TextWithLine from "./components/TextDecoration/textDecoration";
-import { getTranslation } from "./utils/utils";
-import { useTranslation } from "./hooks/useTranslation";
+import FormModal from './components/Modal/modal';
+import ContactForm from './components/ContactForm/contactForm';
+import { brandImages, featuredProdcuts } from './utils/assetIndex';
+import TextWithLine from './components/TextDecoration/textDecoration';
+import { useTranslation } from './hooks/useTranslation';
 
-import "./styles.home.css";
-import Carusel from "./components/common/Carusel";
-
-const inter = Inter({ subsets: ["latin"] });
-const brands = [
-  { id: 1, name: "Eagle Parts", logo: "/eaglePartsLogo.webp" },
-  { id: 2, name: "Quantum Trux Parts", logo: "/quantumTruxPartsLogo.webp" },
-  { id: 3, name: "USA PRO", logo: "/usaProLogo.webp" },
-  { id: 4, name: "JM Internacional", logo: "/jm-logo-transparent-bg-min.webp" },
-  { id: 5, name: "Brand 5", logo: "/eaglePartsLogo.webp" },
-  { id: 6, name: "Brand 6", logo: "/quantumTruxPartsLogo.webp" },
-  { id: 7, name: "Brand 7", logo: "/usaProLogo.webp" },
-];
+import './styles.home.css';
+import Carusel from './components/common/Carusel';
+import { fetchBrands } from './api/hello/route';
 
 export default function Home() {
-  const bg = useColorModeValue("gray.100", "gray.800");
+  const bg = useColorModeValue('gray.100', 'gray.800');
   const [modalToggle, setModalToggle] = useState(false);
+  const [brandImages, setBrandImages] = useState([]);
   const { t } = useTranslation();
 
   const handleModalToggle = (state: boolean) => {
@@ -75,71 +65,91 @@ export default function Home() {
     return active;
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetchBrands();
+        console.log('data',JSON.stringify(data,null,3))
+        setBrandImages(data);
+      } catch (error) {
+        console.error('Error fetching brands:', error);
+      }
+    })();
+  }, []);
+
   return (
-    <Box w={"100%"} padding={0} margin={0}>
+    <Box
+      w={'100%'}
+      padding={0}
+      margin={0}
+    >
       <Navbar isHomePage={true} />
-      <Box w={"full"}>
-        <Box pos={"relative"} h={"60vh"} overflow={"hidden"}>
+      <Box w={'full'}>
+        <Box
+          pos={'relative'}
+          h={'60vh'}
+          overflow={'hidden'}
+        >
           <Box
-            as="video"
+            as='video'
             autoPlay
             loop
             muted
             playsInline
-            src="/homePageBanner.mp4"
-            objectFit={"cover"}
-            width={"100%"}
-            height={"100%"}
-            bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
+            src='/homePageBanner.mp4'
+            objectFit={'cover'}
+            width={'100%'}
+            height={'100%'}
+            bgGradient={'linear(to-r, blackAlpha.600, transparent)'}
           />
           <Flex
-            pos="absolute"
-            alignItems="center"
-            justifyContent="center"
-            w={"full"}
-            h={"65vh"}
+            pos='absolute'
+            alignItems='center'
+            justifyContent='center'
+            w={'full'}
+            h={'65vh'}
             top={0}
             bottom={0}
             right={0}
             left={0}
           >
             <VStack
-              w={"full"}
-              h={"full"}
-              justify={"center"}
+              w={'full'}
+              h={'full'}
+              justify={'center'}
               px={useBreakpointValue({ base: 4, md: 8 })}
-              bgGradient={"linear(to-r, blackAlpha.600, transparent)"}
+              bgGradient={'linear(to-r, blackAlpha.600, transparent)'}
             >
               <VStack
-                maxW={"2xl"}
-                align={"center"}
-                justifyContent={"center"}
+                maxW={'2xl'}
+                align={'center'}
+                justifyContent={'center'}
                 spacing={6}
               >
                 <Text
-                  textAlign={"center"}
-                  color={"white"}
+                  textAlign={'center'}
+                  color={'white'}
                   fontWeight={700}
                   lineHeight={1.2}
                   fontSize={useBreakpointValue({
-                    base: "3xl",
-                    md: "4xl",
+                    base: '3xl',
+                    md: '4xl',
                   })}
                 >
-                  {t("TITLE_HOME")}
+                  {t('TITLE_HOME')}
                 </Text>
                 <Button
-                  bg={"#ED1C24"}
-                  size={"lg"}
-                  rounded={"2xl"}
-                  color={"white"}
-                  _hover={{ bg: "white", color: "#ED1C24" }}
+                  bg={'#ED1C24'}
+                  size={'lg'}
+                  rounded={'2xl'}
+                  color={'white'}
+                  _hover={{ bg: 'white', color: '#ED1C24' }}
                   onClick={() => {
                     // Add your contact page route or any specific action
                     handleModalToggle(!modalToggle);
                   }}
                 >
-                  {t("CONTACT")}
+                  {t('CONTACT')}
                 </Button>
               </VStack>
             </VStack>
@@ -147,19 +157,34 @@ export default function Home() {
         </Box>
         {/* <VStack alignItems="center" w="100%"> */}
         {/* Brands Section */}
-        <Flex pb={20} pt={10} alignItems="center" justify={"center"} w="100%">
-          <VStack spacing={4} w={"75%"}>
-            <TextWithLine text={t("Our_Brands")} />
-            <Text as="h4" fontSize="xl" color={"rgba(1,1,1,0.5)"}>
-              {t("TOP_TIER")}
+        <Flex
+          pb={20}
+          pt={10}
+          alignItems='center'
+          justify={'center'}
+          w='100%'
+        >
+          <VStack
+            spacing={4}
+            w={'75%'}
+          >
+            <TextWithLine text={t('Our_Brands')} />
+            <Text
+              as='h4'
+              fontSize='xl'
+              color={'rgba(1,1,1,0.5)'}
+            >
+              {t('TOP_TIER')}
             </Text>
             {/* <HStack spacing={10} wrap="wrap" justifyContent="center" mt={5}> */}
+                        {/*   TODO: aqui acordate de ajustarlo en dependencia de imagenes que quieran mostrar aqui lo cambie a 3 cambie la "XL:"
+            por que solo 3 subi yo xd deberia de estar bien con la config de antes si mantienen  varias imagenes  */}
             <Box
               maxW={useBreakpointValue({
-                base: "container.ls",
-                sm: "container.sm",
-                xl: "container.xl",
-                md: "container.md",
+                base: 'container.ls',
+                sm: 'container.sm',
+                xl: 'container.xl',
+                md: 'container.md',
               })}
             >
               <BrandCarousel
@@ -168,7 +193,7 @@ export default function Home() {
                   useBreakpointValue({
                     base: 1,
                     sm: 1,
-                    xl: 5,
+                    xl: 3,
                     l: 5,
                     md: 3,
                   }) ?? 1
@@ -193,78 +218,102 @@ export default function Home() {
         <VStack
           pb={20}
           pt={10}
-          bg={"#ED1C24"}
-          w="100%"
-          as="div"
-          justify="center"
+          bg={'#ED1C24'}
+          w='100%'
+          as='div'
+          justify='center'
           spacing={8}
           padding={3}
         >
-          <Heading color={"white"} as="h1" size="2xl" maxW={"2xl"} textAlign={"center"}>
-            {t("TRAILER_TRUK")}
+          <Heading
+            color={'white'}
+            as='h1'
+            size='2xl'
+            maxW={'2xl'}
+            textAlign={'center'}
+          >
+            {t('TRAILER_TRUK')}
           </Heading>
           <Divider maxWidth={500} />
-          <Text color={"white"} maxW={"xl"} fontSize="xl" textAlign="center">
-            {t("TRAILER_TRUNK_CONTENT")}
+          <Text
+            color={'white'}
+            maxW={'xl'}
+            fontSize='xl'
+            textAlign='center'
+          >
+            {t('TRAILER_TRUNK_CONTENT')}
           </Text>
           <Button
-            size="lg"
-            colorScheme="whiteAlpha"
-            _hover={{ bg: "white", color: "#ED1C24" }}
+            size='lg'
+            colorScheme='whiteAlpha'
+            _hover={{ bg: 'white', color: '#ED1C24' }}
             onClick={() => {
               // Add your contact page route or any specific action
               handleModalToggle(!modalToggle);
             }}
           >
-            {t("CONTACT")}
+            {t('CONTACT')}
           </Button>
         </VStack>
         {/* Featured Products Section */}
-        <Flex w={"100%"} justify={"center"} alignItems={"center"} padding={10}>
+        <Flex
+          w={'100%'}
+          justify={'center'}
+          alignItems={'center'}
+          padding={10}
+        >
           <Carusel sections={featuredProdcuts} />
         </Flex>
         {/* Catalog Section */}
         <Divider></Divider>
-        <Flex bg={"#B3B3B3"} justify="center" py={6} padding={10}>
+        <Flex
+          bg={'#B3B3B3'}
+          justify='center'
+          py={6}
+          padding={10}
+        >
           <VStack>
-            <Box padding={5} maxW={"80%"}>
+            <Box
+              padding={5}
+              maxW={'80%'}
+            >
               <TextWithLine
                 undecorate={display()}
-                color="#ED1C24"
-                lineColor="black"
-                text={t("Review")}
+                color='#ED1C24'
+                lineColor='black'
+                text={t('Review')}
               />
               <Text
-                maxWidth={"90%"}
-                fontSize="xl"
-                maxW={"md"}
-                textAlign={"center"}
-                color={"rgba(1,1,1,0.5)"}
+                maxWidth={'90%'}
+                fontSize='xl'
+                maxW={'md'}
+                textAlign={'center'}
+                color={'rgba(1,1,1,0.5)'}
               >
-                {t("Need_Clients")}
+                {t('Need_Clients')}
               </Text>
             </Box>
 
-            <div className="row-card">
+            <div className='row-card'>
               <ImageC
-                boxSize="300px"
-                objectFit="contain"
-                alt="Contact Us"
-                src={"/quantumCatalogo2023.jpg"}
+                boxSize='300px'
+                objectFit='contain'
+                alt='Contact Us'
+                src={'/quantumCatalogo2023.jpg'}
                 margin={10}
               />
               <ImageC
-                boxSize="300px"
-                objectFit="contain"
-                alt="Contact Us"
-                src={"/eagCatalogo2023.jpg"}
+                boxSize='300px'
+                objectFit='contain'
+                alt='Contact Us'
+                src={'/eagCatalogo2023.jpg'}
                 margin={10}
               />
               <ImageC
-                boxSize="300px"
-                objectFit="contain"
-                alt="Contact Us"
-                src={"/usaCatalogo2023.jpg"}
+                boxSize='300px'
+                objectFit='contain'
+                alt='Contact Us'
+                src={'/usaCatalogo2023.jpg'}
                 margin={10}
               />
             </div>
@@ -272,29 +321,37 @@ export default function Home() {
         </Flex>
         {/* Contact Us Section */}
         <HStack
-          justifyContent={"center"}
-          alignItems={"center"}
-          bgImage={"/white-red-arrow.png"}
-          bgSize={"cover"}
-          bgRepeat={"no-repeat"}
-          bgPos={"right"}
-          bgColor={"#b3b3b3"}
+          justifyContent={'center'}
+          alignItems={'center'}
+          bgImage={'/white-red-arrow.png'}
+          bgSize={'cover'}
+          bgRepeat={'no-repeat'}
+          bgPos={'right'}
+          bgColor={'#b3b3b3'}
         >
           <ImageC
-            className="image-contact"
-            boxSize="500px"
-            w={"650px"}
-            h={"500px"}
-            objectFit="cover"
-            alt="Contact Us"
+            className='image-contact'
+            boxSize='500px'
+            w={'650px'}
+            h={'500px'}
+            objectFit='cover'
+            alt='Contact Us'
             borderRadius={10}
-            src={"/comp4H.jpg"}
+            src={'/comp4H.jpg'}
           />
-          <VStack dir="row" maxW={"90%"}>
+          <VStack
+            dir='row'
+            maxW={'90%'}
+          >
             {/* <div style={{ backgroundColor: "#fff", justifyContent: "center" }}> */}
             {/* <Flex justifyContent="center"> */}
-            <Box bg={"#fff"} p={20} borderRadius={"50px"} margin={10}>
-              <Heading zIndex={1}>{t("CONTACT")}</Heading>
+            <Box
+              bg={'#fff'}
+              p={20}
+              borderRadius={'50px'}
+              margin={10}
+            >
+              <Heading zIndex={1}>{t('CONTACT')}</Heading>
               {/* <Spacer/> */}
               <ContactForm />
             </Box>
@@ -305,32 +362,35 @@ export default function Home() {
 
         <Box
           // ref={ref}
-          h={"350px"}
-          w={"100%"}
-          pos={"sticky"}
-          bg="white"
+          h={'350px'}
+          w={'100%'}
+          pos={'sticky'}
+          bg='white'
           // bgPosition
-          overflow="hidden"
-          bgPos={"bottom"}
-          bgImage={"/pageEnd.jpg"}
+          overflow='hidden'
+          bgPos={'bottom'}
+          bgImage={'/pageEnd.jpg'}
         >
           {/* <Image alt='pageEnd' src='/pageEnd.jpg' />
            */}
           <Box
-            position="absolute"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            bgImage="linear-gradient(to top, rgba(255,255,255,.2), rgba(255,255,255,1))"
+            position='absolute'
+            top='0'
+            left='0'
+            right='0'
+            bottom='0'
+            bgImage='linear-gradient(to top, rgba(255,255,255,.2), rgba(255,255,255,1))'
             // bgSize="cover"
             // bgPosition="bottom"
-          />{" "}
+          />{' '}
         </Box>
         {/* </VStack> */}
         {/* </VStack> */}
         {/*Form Modal */}
-        <FormModal open={modalToggle} setOpen={handleModalToggle} />
+        <FormModal
+          open={modalToggle}
+          setOpen={handleModalToggle}
+        />
       </Box>
     </Box>
   );
